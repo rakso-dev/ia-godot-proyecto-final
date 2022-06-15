@@ -7,16 +7,16 @@ var speed = 64
 func _process(delta):
 	mov.x = 0
 	mov.y = 0
-	if Input.action_press("ui_right"):
+	if Input.is_action_just_pressed("ui_right"):
 		mov.x = speed
 		mov.y = 0
-	if Input.action_press("ui_down"):
+	if Input.is_action_just_pressed("ui_down"):
 		mov.y = speed
 		mov.x = 0
-	if Input.action_press("ui_left"):
+	if Input.is_action_just_pressed("ui_left"):
 		mov.x = -1 * speed
 		mov.y = 0
-	if Input.action_press("ui_up"):
+	if Input.is_action_just_pressed("ui_up"):
 		mov.y = -1 * speed
 		mov.x = 0
 	move_and_collide(mov)
