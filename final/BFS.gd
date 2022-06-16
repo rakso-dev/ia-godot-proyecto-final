@@ -1,5 +1,24 @@
 extends Node2D
 
+#son los puntos donde hace esquina o cruce
+var turns = [[96,96],
+[224, 96],
+[352, 96],
+[928, 96],
+[224, 192],
+[352, 192],
+[352, 224],
+[672, 224],
+[928, 224],
+[96, 256],
+[224, 256],
+[224, 384],
+[352, 384],
+[672, 384],
+[928, 384],
+[96, 512],
+[224, 512],
+[928, 512]]
 #onready var map = $"../TileMap"
 #onready var player = $"../Player"
 #onready var bot = $"Bot-BFS"
@@ -21,7 +40,7 @@ extends Node2D
 #
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	$"Bot-BFS".dest = 0
+	$"Bot-BFS".dest = BFSTree.new()
 	#pendent var way = BFSTree.RecorreNiveles(BFSTree.new())
 	pass
 #	var map_pos
