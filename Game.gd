@@ -47,13 +47,20 @@ func _ready():
 	pass
 	
 func _process(delta):
-	$"Bot-BFS".destiny = [turns[5], turns[2]]
-	$"Bot-AS".destiny = [turns[5]]
+	#$"Bot-BFS".destiny = [turns[5], turns[2]]
+	#$"Bot-AS".destiny = [turns[5]]
 	
 	var vec_src = get_vecinity([int($Player.position.x), int($Player.position.y)])
-	var vec_BFS = get_vecinity([int($"Bot-BFS".position.x), int($"Bot-BFS".position.y)])
+	#var vec_BFS = get_vecinity([int($"Bot-BFS".position.x), int($"Bot-BFS".position.y)])
 	#print("src: {str}".format({"str": str(connections[vec_src])}))
 	#print("dest: {str}".format({"str": str(connections[vec_BFS])}))
+	DFSTree.turns = turns
+	DFSTree.connections = connections
+	var vec_DFS = get_vecinity([int($"Bot-DFS".position.x), int($"Bot-DFS".position.y)])
+	var DFS_root = DFSTree.new(vec_DFS)
+	DFS_root.DFS(vec_src)
+	DFSTree.way.invert()
+	$"Bot-DFS".destiny = DFSTree.way
 	
 	
 func is_between(p1, p2, pos):
@@ -96,3 +103,39 @@ func get_slope(src, node):
 		return 0
 	return x / y
 
+
+###### No existen las variables de clase, solo de instancia, hacer modificaciones ###########
+class DFSTree:
+	var turns
+	var connections
+	var way
+	var done
+	var pos
+	var branches
+	
+	func _init(pos):
+		self.pos = pos
+		self.branches = []
+		
+	func expand():
+		for item in connections[self.pos]:
+			self.branches.append(item)
+		
+	func is_goal(goal):
+		return self.pos == goal
+		
+	func DFS(goal):
+		if not self.pos:
+			return false
+		if self.pos in done:
+			return false
+		if is_goal(goal):
+			way.append(self.pos)
+			return true
+		done.append(self.pos)
+		self.expand()
+		for branch in self.branches:
+			if branch.DFS(goal):
+				way.append(goal)
+				return true
+		return false
