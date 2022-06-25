@@ -54,13 +54,16 @@ func _process(delta):
 	#var vec_BFS = get_vecinity([int($"Bot-BFS".position.x), int($"Bot-BFS".position.y)])
 	#print("src: {str}".format({"str": str(connections[vec_src])}))
 	#print("dest: {str}".format({"str": str(connections[vec_BFS])}))
-	DFSTree.turns = turns
-	DFSTree.connections = connections
+	#########      DFS Block    #########
 	var vec_DFS = get_vecinity([int($"Bot-DFS".position.x), int($"Bot-DFS".position.y)])
-	var DFS_root = DFSTree.new(vec_DFS)
-	DFS_root.DFS(vec_src)
-	DFSTree.way.invert()
-	$"Bot-DFS".destiny = DFSTree.way
+	var DFS_root = DFSTree.new(vec_DFS, turns, connections, [])
+	var DFS_way = DFS_root.DFS(vec_src)
+	DFS_way.invert()
+	DFS_way.pop_back()
+	$"Bot-DFS".destiny = DFS_way
+	print($"Bot-DFS".destiny)
+	######### end of DFS Block   #########
+	#########     BFS Block      #########
 	
 	
 func is_between(p1, p2, pos):
@@ -104,38 +107,43 @@ func get_slope(src, node):
 	return x / y
 
 
-###### No existen las variables de clase, solo de instancia, hacer modificaciones ###########
 class DFSTree:
 	var turns
 	var connections
-	var way
+	#var way = []
 	var done
 	var pos
 	var branches
 	
-	func _init(pos):
+	func _init(pos, turns, connections, done):
 		self.pos = pos
+		self.turns = turns
+		self.connections = connections
+		self.done = done
 		self.branches = []
 		
 	func expand():
 		for item in connections[self.pos]:
-			self.branches.append(item)
+			self.branches.append(DFSTree.new(item, self.turns, self.connections, self.done))
 		
 	func is_goal(goal):
 		return self.pos == goal
 		
 	func DFS(goal):
 		if not self.pos:
-			return false
+			return null
 		if self.pos in done:
-			return false
+			return null
+		var way = []
 		if is_goal(goal):
 			way.append(self.pos)
-			return true
+			return way
 		done.append(self.pos)
 		self.expand()
 		for branch in self.branches:
-			if branch.DFS(goal):
-				way.append(goal)
-				return true
-		return false
+			var tmp = branch.DFS(goal)
+			if tmp:
+				way.append(self.pos)
+				way.append_array(tmp)
+				return way
+		return way
