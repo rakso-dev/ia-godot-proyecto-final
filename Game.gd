@@ -59,12 +59,17 @@ func _process(delta):
 	var DFS_root = DFSTree.new(vec_DFS, turns, connections, [])
 	var DFS_way = DFS_root.DFS(vec_src)
 	DFS_way.invert()
-	DFS_way.pop_back()
+	#DFS_way.pop_back()
 	$"Bot-DFS".destiny = DFS_way
-	print($"Bot-DFS".destiny)
 	######### end of DFS Block   #########
 	#########     BFS Block      #########
-	
+	var vect_BFS = get_vecinity([int($"Bot-BFS".position.x), $"Bot-BFS".position.y])
+	var BFS_root = BFSTree.new(vect_BFS, null, turns, connections)
+	var BFS_way = BFS_root.BFS(vec_src)
+	BFS_way.invert()
+	#BFS_way.pop_back()
+	$"Bot-BFS".destiny = BFS_way
+	######### end of BFS Block   #########
 	
 func is_between(p1, p2, pos):
 	if get_slope(p1, p2) != 0 and get_slope(p1, pos) !=0:
@@ -147,3 +152,45 @@ class DFSTree:
 				way.append_array(tmp)
 				return way
 		return way
+
+class BFSTree:
+	var turns
+	var connections
+	var pos
+	var branches
+	var parent
+	
+	func _init(pos, parent, turns, connections):
+		self.pos = pos
+		self.parent = parent
+		self.branches = []
+		self.turns = turns
+		self.connections = connections
+		
+	func expand():
+		for item in connections[self.pos]:
+			branches.append(BFSTree.new(item, self, self.turns, self.connections))
+	
+	func is_goal(goal):
+		return self.pos == goal
+		
+	func get_way():
+		if not self.parent:
+			return [self.pos]
+		var way = [self.pos]
+		way.append_array(self.parent.get_way())
+		return way
+		
+	func BFS(goal):
+		var queue = []
+		var visited = []
+		queue.append(self)
+		for element in queue:
+			if element.is_goal(goal):
+				return element.get_way()
+			visited.append(element.pos)
+			element.expand()
+			for branch in element.branches:
+				if not branch.pos in visited:
+					queue.append(branch)
+					

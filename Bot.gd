@@ -23,7 +23,6 @@ func move_control():
 		self.position.y = curr_destination[1]
 		
 		curr_destination = destiny.pop_back()
-		print(curr_destination)
 		return
 	
 	if delta_x == 0:
