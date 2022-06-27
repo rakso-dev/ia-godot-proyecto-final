@@ -6,6 +6,4 @@ A traves de un videojuego realizado con el motor Godot se implementan los algori
 * Busqueda Primero en Profundidad (DFS)
 * Busqueda Primero en Anchura (BFS)
 * Greedy
-* A*
-
 

@@ -47,13 +47,9 @@ func _ready():
 	pass
 	
 func _process(delta):
-	#$"Bot-BFS".destiny = [turns[5], turns[2]]
-	#$"Bot-AS".destiny = [turns[5]]
-	
+		
 	var vec_src = get_vecinity([int($Player.position.x), int($Player.position.y)])
-	#var vec_BFS = get_vecinity([int($"Bot-BFS".position.x), int($"Bot-BFS".position.y)])
-	#print("src: {str}".format({"str": str(connections[vec_src])}))
-	#print("dest: {str}".format({"str": str(connections[vec_BFS])}))
+	
 	#########      DFS Block    #########
 	var vec_DFS = get_vecinity([int($"Bot-DFS".position.x), int($"Bot-DFS".position.y)])
 	var DFS_root = DFSTree.new(vec_DFS, turns, connections, [])
@@ -70,6 +66,11 @@ func _process(delta):
 	#BFS_way.pop_back()
 	$"Bot-BFS".destiny = BFS_way
 	######### end of BFS Block   #########
+	#########    Greedy Block    #########
+	var vec_greedy = get_vecinity([int($"Bot-Greedy".position.x), int($"Bot-Greedy".position.y)])
+	var greedy_root = GreedyTree.new(vec_greedy, vec_src, turns, connections)
+	$"Bot-Greedy".destiny = greedy_root.greedy_search()
+	######### end of greedy Block #########
 	
 func is_between(p1, p2, pos):
 	if get_slope(p1, p2) != 0 and get_slope(p1, pos) !=0:
@@ -194,3 +195,39 @@ class BFSTree:
 				if not branch.pos in visited:
 					queue.append(branch)
 					
+class GreedyTree:
+	var pos
+	var goal
+	var distance
+	var branches
+	var turns
+	var connections
+	
+	func _init(pos, goal, turns, connections):
+		self.pos = pos
+		self.goal = goal
+		self.turns = turns
+		self.connections = connections
+		self.branches = []
+		self.distance = self.get_distance()
+		
+	func get_distance():
+		var x = pow((self.goal[0] - self.pos[0]), 2)
+		var y = pow((self.goal[1] - self.pos[1]), 2)
+		return pow(x + y, 0.5)
+		
+	func expand():
+		for item in self.connections[self.pos]:
+			self.branches.append(GreedyTree.new(item, self.goal, self.turns, self.connections))
+			
+	func greedy_search():
+		if self.distance == 0:
+			return [self.pos]
+		self.expand()
+		var shortest = self.branches[0]
+		for branch in self.branches:
+			if branch.distance < shortest.distance:
+				shortest = branch
+		var way = [self.pos]
+		way.append_array(shortest.greedy_search())
+		return way

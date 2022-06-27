@@ -1,5 +1,5 @@
 extends KinematicBody2D
-var speed = 100
+var speed = 1000
 var mov = Vector2()
 var destiny = null
 var curr_destination = null
@@ -10,6 +10,7 @@ func _process(delta):
 	if curr_destination == null:
 		curr_destination = destiny.pop_back()
 	move_control()
+	print("%f, %f" % [position.x, position.y])
 	move_and_collide(mov * delta)
 	
 func move_control():

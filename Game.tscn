@@ -11,11 +11,11 @@
 
 [sub_resource type="RectangleShape2D" id=4]
 
-[sub_resource type="RectangleShape2D" id=5]
+[sub_resource type="RectangleShape2D" id=3]
 
 [sub_resource type="RectangleShape2D" id=2]
 
-[sub_resource type="RectangleShape2D" id=3]
+[sub_resource type="RectangleShape2D" id=5]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 2 )
@@ -55,6 +55,34 @@ texture = ExtResource( 6 )
 scale = Vector2( 3, 3 )
 shape = SubResource( 4 )
 
+[node name="Bot-Greedy" type="KinematicBody2D" parent="." groups=["enemy"]]
+position = Vector2( 96, 512 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="Bot-Greedy"]
+texture = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bot-Greedy"]
+scale = Vector2( 3, 3 )
+shape = SubResource( 3 )
+
+[node name="Bot-AS" type="KinematicBody2D" parent="." groups=["enemy"]]
+position = Vector2( 352, 384 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="Bot-AS"]
+texture = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bot-AS"]
+scale = Vector2( 3, 3 )
+shape = SubResource( 2 )
+
 [node name="Player" type="KinematicBody2D" parent="."]
 position = Vector2( 352, 192 )
 script = ExtResource( 3 )
@@ -84,30 +112,3 @@ cast_to = Vector2( -32, 0 )
 [node name="up" type="RayCast2D" parent="Player"]
 enabled = true
 cast_to = Vector2( 0, -32 )
-
-[node name="Bot-AS" type="KinematicBody2D" parent="." groups=["enemy"]]
-position = Vector2( 352, 384 )
-script = ExtResource( 4 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Sprite" type="Sprite" parent="Bot-AS"]
-texture = ExtResource( 6 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Bot-AS"]
-scale = Vector2( 3, 3 )
-shape = SubResource( 2 )
-
-[node name="Bot-Greedy" type="KinematicBody2D" parent="." groups=["enemy"]]
-position = Vector2( 96, 512 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Sprite" type="Sprite" parent="Bot-Greedy"]
-texture = ExtResource( 6 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Bot-Greedy"]
-scale = Vector2( 3, 3 )
-shape = SubResource( 3 )
