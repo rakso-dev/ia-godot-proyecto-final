@@ -231,3 +231,35 @@ class GreedyTree:
 		var way = [self.pos]
 		way.append_array(shortest.greedy_search())
 		return way
+
+class AS_Tree:
+	var pos
+	var goal
+	var parent
+	var distance
+	var heuristics
+	var cost
+	var branches
+	var turns
+	var connections
+	
+	func _init(pos, goal, parent, turns, connections):
+		self.pos = pos
+		self.goal = goal
+		self.parent = parent
+		if self.parent:
+			self.distance = self.get_distance(parent.pos)
+			self.cost = parent.cost
+		else:
+			self.distance = 0
+			self.cost = 0
+		self.heuristics = self.get_distance(self.goal)
+		self.cost += self.distance + self.heuristics
+		self.branches = []
+		
+	func get_distance(point):
+		var x = pow((point[0] - self.pos[0]), 2)
+		var y = pow((point[1] - self.pos[1]), 2)
+		return pow((x + y), 0.5)
+		
+	
