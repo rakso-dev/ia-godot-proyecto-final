@@ -1,5 +1,9 @@
 extends Node2D
 
+#var player = null
+#var DFS = null
+#var BFS = null
+#var greedy = null
 #graph nodes
 var turns = [[96,96], #0
 [224, 96], #1
@@ -72,6 +76,14 @@ func _process(delta):
 	$"Bot-Greedy".destiny = greedy_root.greedy_search()
 	######### end of greedy Block #########
 	
+#	clean_pos(vec_src)
+#	clean_pos(vec_DFS)
+#	clean_pos(vect_BFS)
+#	clean_pos(vec_greedy)
+	
+	#reset_nodes()
+	#print(connections.keys())
+	
 func is_between(p1, p2, pos):
 	if get_slope(p1, p2) != 0 and get_slope(p1, pos) !=0:
 		return false
@@ -99,7 +111,7 @@ func get_vecinity(pos):
 				neighbors.append(key)
 				neighbors.append(n)
 				break
-	connections[pos] = neighbors
+	connections[pos] = neighbors # esta cosa no esta metiendo la posicion en el diccionario ;-;
 	connections[neighbors[0]].append(pos)
 	connections[neighbors[1]].append(pos)
 	return pos
@@ -112,6 +124,19 @@ func get_slope(src, node):
 		return 0
 	return x / y
 
+func clean_pos(key):
+	if len(connections.keys()) == 18:
+		return
+	if key in turns:
+		return
+	for item in connections[key]:
+		connections[item].erase(key)
+	connections.erase(key)
+	
+func reset_nodes():
+		for key in connections.keys():
+			if not key in turns:
+				connections.erase(key)
 
 class DFSTree:
 	var turns
@@ -231,6 +256,9 @@ class GreedyTree:
 		var way = [self.pos]
 		way.append_array(shortest.greedy_search())
 		return way
+		
+	
+			
 
 class AS_Tree:
 	var pos
